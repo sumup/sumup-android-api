@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.sumup.apisampleapp">
+
+    <application
+      android:allowBackup="true"
+      android:icon="@drawable/icon"
+      android:label="@string/app_name"
+      android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+
+    <activity
+      android:name="com.sumup.apisampleapp.MainActivity"
+      android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+          android:name="com.sumup.apisampleapp.ResponseActivity"
+          android:label="Payment Result">
+            <intent-filter>
+                <action android:name="com.sumup.apisampleapp.ResponseActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+        <activity
+          android:name="com.sumup.apisampleapp.URLResponseActivity"
+          android:label="Payment Result">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="com.sumup.apisampleapp.URLResponseActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                 <data
+                   android:scheme="sumupsampleresult"
+                   android:host="result"/>
+            </intent-filter>
+
+        </activity>
+    </application>
+</manifest>
