@@ -145,27 +145,60 @@ Failure:
 
 When setting up the SumUpPayment object, it is possible to pass an optional foreignTransactionID parameter. This identifier will be associated with the transaction and can be used to retrieve this transaction later. See <a href="https://sumup.com/integration#transactionReportingAPIs" target="_blank">API documentation</a> for details. Please make sure that this ID is unique within the scope of the SumUp merchant account and sub-accounts. It must not be longer than 128 characters.
 
-#####2. Status code
-A status code is provided as part of the callback
+#####2. Response flags
 
 #####a) With the API Helper
 
- ```java 
- 	int resultCode = getIntent().getExtras()getInt(SumUpAPI.EXTRA_RESULT_CODE);
+Several response flags are available when the callback activity is called : 
+* SumUpAPI.Response.RESULT_CODE
+  * Type : int
+  * Possible Values : 
+    * SumUpAPI.Response.ResultCode.TRANSACTION_SUCCESSFUL = 1
+    * SumUpAPI.Response.ResultCode.ERROR_TRANSACTION_FAILED = 2
+    * SumUpAPI.Response.ResultCode.ERROR_GEOLOCATION_REQUIRED = 3
+    * SumUpAPI.Response.ResultCode.ERROR_INVALID_PARAM = 4
+    * SumUpAPI.Response.ResultCode.ERROR_INVALID_TOKEN = 5
+    * SumUpAPI.Response.ResultCode.ERROR_NO_CONNECTIVITY = 6
+* SumUpAPI.Response.MESSAGE
+  * Type : String
+  * Description : A human readable message describing the result of the payment
+* SumUpAPI.Response.TX_CODE
+  * Type : String
+  * Description : The transaction code associated with the payment
+* SumUpAPI.Response.RECEIPT_SENT
+  * Type : boolean
+  * Description : true if a receipt was issued to the customer, false otherwise
+
+The response flags are provided within the Bundle that is passed back to the callback activity.
+
+```java 
+ 	int resultCode = getIntent().getExtras()getInt(SumUpAPI.Response.RESULT_CODE);
  ```
- 
-Possible values are : 
-
-* SumUpAPI.TRANSACTION_SUCCESSFUL = 1
-* SumUpAPI.ERROR_TRANSACTION_FAILED = 2
-* SumUpAPI.ERROR_GEOLOCATION_REQUIRED = 3
-* SumUpAPI.ERROR_INVALID_PARAM = 4
-
 
 #####b) With the URI call / Payment API - Web
 
 * smp-status: `success/failed`
 * smp-failure-cause (send it smp-status is `failed`): `transaction-failed/geolocation-required/invalid-param/invalid-token`
 
+#IV. Incubating feature
 
+#####1. StartActivityForResult pattern with the API Helper
 
+*Only available for app versions 1.56.2 and up*
+
+If you prefer to receive the result of a transaction in the same Activity, open the PaymentActivity with :
+ 
+```java
+   SumUpAPI.openPaymentActivity(MainActivity.this, payment, 1);
+```
+
+Then, you can react on the result of a transaction with : 
+
+```java
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      if (requestCode == 1 && data != null) {
+         // Handle the response here
+      }
+   }
+```

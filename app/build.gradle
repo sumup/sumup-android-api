@@ -8,14 +8,13 @@ android {
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 3
-        versionName "1.0"
+        versionName "1.1"
     }
 }
 
 dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
 
-    compile 'com.sumup:merchant-api:1.0'
-
+    compile 'com.sumup:merchant-api:1.1'
 
 }
