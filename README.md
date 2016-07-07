@@ -3,7 +3,7 @@
 This documentation is intended for app versions 1.55.0 and up.
 
 ##I. Getting Started
-* Create a SumUp account and get an affiliate key <a href="https://me.sumup.com/integration-tools" target="_blank">here</a>
+* Create a SumUp account and get an affiliate key <a href="https://me.sumup.com/developers" target="_blank">here</a>
 
 ##II. How to call the Payment API
 
@@ -47,7 +47,7 @@ compile 'com.sumup:merchant-api:1.1'
 ```java
     SumUpPayment payment = SumUpPayment.builder()
             //mandatory parameters
-            // Your affiliate key is bound to the applicationID entered in the SumUp dashboard at https://me.sumup.com/integration-tools
+            // Your affiliate key is bound to the applicationID entered in the SumUp dashboard at https://me.sumup.com/developers
             .affiliateKey("YOUR_AFFILIATE_KEY")
             .productAmount(1.23)
             .currency(SumUpPayment.Currency.EUR)
