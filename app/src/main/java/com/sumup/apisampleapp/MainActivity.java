@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 SumUpPayment payment = SumUpPayment.builder()
                         // mandatory parameters
-                        // Your affiliate key is bound to the applicationID entered in the SumUp dashboard at https://me.sumup.com/integration-tools
+                        // Your affiliate key is bound to the applicationID entered in the SumUp dashboard at https://me.sumup.com/developers
                         .affiliateKey("7ca84f17-84a5-4140-8df6-6ebeed8540fc")
                         .productAmount(1.23)
                         .currency(SumUpPayment.Currency.EUR)// optional: add details
