@@ -14,7 +14,7 @@ This documentation is intended for app versions 1.55.0 and up.
 
 The sample app provided in this repository can be used as a reference.
 
-<a href="https://sumup.com/integration" target="_blank">Full SumUp API Documentation</a>
+<a href="https://sumup.com/docs" target="_blank">Full SumUp API Documentation</a>
 
 ##API Helper
 
@@ -143,7 +143,7 @@ Failure:
 
 #####1. Include a transaction identifier
 
-When setting up the SumUpPayment object, it is possible to pass an optional foreignTransactionID parameter. This identifier will be associated with the transaction and can be used to retrieve this transaction later. See <a href="https://sumup.com/integration#transactionReportingAPIs" target="_blank">API documentation</a> for details. Please make sure that this ID is unique within the scope of the SumUp merchant account and sub-accounts. It must not be longer than 128 characters.
+When setting up the SumUpPayment object, it is possible to pass an optional foreignTransactionID parameter. This identifier will be associated with the transaction and can be used to retrieve this transaction later. See <a href="https://sumup.com/docs/rest-api/transactions-api" target="_blank">API documentation</a> for details. Please make sure that this ID is unique within the scope of the SumUp merchant account and sub-accounts. It must not be longer than 128 characters.
 
 #####2. Response flags
 
