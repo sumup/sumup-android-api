@@ -29,7 +29,7 @@ allprojects {
 
 #####2. Add the dependency to a module 
 ```groovy
-compile 'com.sumup:merchant-api:1.1'
+compile 'com.sumup:merchant-api:1.1.1'
 ```
 
 #####3. Provide a callback activity

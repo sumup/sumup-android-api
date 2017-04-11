@@ -1,20 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 24
+    buildToolsVersion '25.0.1'
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 21
-        versionCode 3
-        versionName "1.1"
+        targetSdkVersion 24
+        versionCode 4
+        versionName "1.1.1"
     }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
 
-    compile 'com.sumup:merchant-api:1.1'
-
+    compile 'com.sumup:merchant-api:1.1.1'
 }
