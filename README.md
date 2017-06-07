@@ -1,11 +1,11 @@
-#SumUp Android Payment API
+# SumUp Android Payment API
 
 This documentation is intended for app versions 1.55.0 and up.
 
-##I. Getting Started
+## I. Getting Started
 * Create a SumUp account and get an affiliate key <a href="https://me.sumup.com/developers" target="_blank">here</a>
 
-##II. How to call the Payment API
+## II. How to call the Payment API
 
 * **From your app**  
   * [Option 1](#api-helper) - Use our API Helper library for easy integration
@@ -16,9 +16,9 @@ The sample app provided in this repository can be used as a reference.
 
 <a href="https://sumup.com/docs" target="_blank">Full SumUp API Documentation</a>
 
-##API Helper
+## API Helper
 
-#####1. Add the repository to your gradle dependencies
+##### 1. Add the repository to your gradle dependencies
 ```groovy
 allprojects {
    repositories {
@@ -27,12 +27,12 @@ allprojects {
 }
 ```
 
-#####2. Add the dependency to a module 
+##### 2. Add the dependency to a module 
 ```groovy
 compile 'com.sumup:merchant-api:1.1.1'
 ```
 
-#####3. Provide a callback activity
+##### 3. Provide a callback activity
 ```xml
 	<activity android:name="com.example.ResultActivity"  android:label="Payment Result">
 	  <intent-filter>
@@ -43,7 +43,7 @@ compile 'com.sumup:merchant-api:1.1.1'
 	</activity>
 ```
 
-#####4. Make a payment
+##### 4. Make a payment
 ```java
     SumUpPayment payment = SumUpPayment.builder()
             //mandatory parameters
@@ -66,9 +66,9 @@ compile 'com.sumup:merchant-api:1.1.1'
     SumUpAPI.openPaymentActivity(MainActivity.this, ResponseActivity.class, payment);
 ```
 
-##URI call
+## URI call
 
-#####1. Provide a callback activity
+##### 1. Provide a callback activity
 ```xml
     <activity
           android:name="com.example.URLResponseActivity"
@@ -86,7 +86,7 @@ compile 'com.sumup:merchant-api:1.1.1'
         </activity>
 ```
 
-#####2. Make a  payment
+##### 2. Make a  payment
 ```java
   Intent payIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(
                         "sumupmerchant://pay/1.0"
@@ -119,7 +119,7 @@ Failure:
 mycallbackscheme://result?smp-status=failed&smp-failure-cause=transaction-failed&smp-message=Transaction%20failed.&smp-receipt-sent=false&smp-tx-code=123ABC&foreign-tx-id=05c14c86-a7a0-49c5-a1ec-acb168f5198x
 ```
 
-###Payment API - Web
+### Payment API - Web
 
 Put a link onto your website
 
@@ -139,15 +139,15 @@ Failure:
 ?smp-status=failed&smp-failure-cause=transaction-failed&smp-message=Transaction%20failed.&smp-receipt-sent=false&smp-tx-code=123ABC
 ```
 
-#III. Additional features
+# III. Additional features
 
-#####1. Include a transaction identifier
+##### 1. Include a transaction identifier
 
 When setting up the SumUpPayment object, it is possible to pass an optional foreignTransactionID parameter. This identifier will be associated with the transaction and can be used to retrieve this transaction later. See <a href="https://sumup.com/docs/rest-api/transactions-api" target="_blank">API documentation</a> for details. Please make sure that this ID is unique within the scope of the SumUp merchant account and sub-accounts. It must not be longer than 128 characters.
 
-#####2. Response flags
+##### 2. Response flags
 
-#####a) With the API Helper
+##### a) With the API Helper
 
 Several response flags are available when the callback activity is called : 
 * SumUpAPI.Response.RESULT_CODE
@@ -175,14 +175,14 @@ The response flags are provided within the Bundle that is passed back to the cal
  	int resultCode = getIntent().getExtras()getInt(SumUpAPI.Response.RESULT_CODE);
  ```
 
-#####b) With the URI call / Payment API - Web
+##### b) With the URI call / Payment API - Web
 
 * smp-status: `success/failed`
 * smp-failure-cause (send it smp-status is `failed`): `transaction-failed/geolocation-required/invalid-param/invalid-token`
 
-#IV. Incubating feature
+# IV. Incubating feature
 
-#####1. StartActivityForResult pattern with the API Helper
+##### 1. StartActivityForResult pattern with the API Helper
 
 *Only available for app versions 1.56.2 and up*
 
