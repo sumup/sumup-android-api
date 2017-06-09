@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpPayment;
 
@@ -14,10 +15,19 @@ import java.util.UUID;
 
 public class MainActivity extends Activity {
 
+    private static final int REQUEST_CODE_PAYMENT = 2;
+
+    private TextView mResultCode;
+    private TextView mResultMessage;
+    private TextView mTxCode;
+    private TextView mReceiptSent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        findViews();
 
         Button btnCheckoutIntent = (Button) findViewById(R.id.button_charge_intent);
         btnCheckoutIntent.setOnClickListener(new View.OnClickListener() {
@@ -39,7 +49,7 @@ public class MainActivity extends Activity {
                         .foreignTransactionId(UUID.randomUUID().toString()) // can not exceed 128 chars
                         .build();
 
-                SumUpAPI.openPaymentActivity(MainActivity.this, ResponseActivity.class, payment);
+                SumUpAPI.openPaymentActivity(MainActivity.this, payment, REQUEST_CODE_PAYMENT);
             }
         });
 
@@ -59,10 +69,46 @@ public class MainActivity extends Activity {
                                 + "&foreign-tx-id=" + UUID.randomUUID().toString()
                                 + "&callback=sumupsampleresult://result"));
 
-                startActivityForResult(payIntent, 0);
-
-
+                startActivity(payIntent);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        resetViews();
+
+        switch (requestCode) {
+            case REQUEST_CODE_PAYMENT:
+                if (data != null) {
+                    Bundle extra = data.getExtras();
+
+                    mResultCode.setText("Result code: " + extra.getInt(SumUpAPI.Response.RESULT_CODE));
+                    mResultMessage.setText("Message: " + extra.getString(SumUpAPI.Response.MESSAGE));
+
+                    String txCode = extra.getString(SumUpAPI.Response.TX_CODE);
+                    mTxCode.setText(txCode == null ? "" : "Transaction Code: " + txCode);
+
+                    boolean receiptSent = extra.getBoolean(SumUpAPI.Response.RECEIPT_SENT);
+                    mReceiptSent.setText("Receipt sent: " + receiptSent);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void resetViews() {
+        mResultCode.setText("");
+        mResultMessage.setText("");
+        mTxCode.setText("");
+        mReceiptSent.setText("");
+    }
+
+    private void findViews() {
+        mResultCode = (TextView) findViewById(R.id.result);
+        mResultMessage = (TextView) findViewById(R.id.result_msg);
+        mTxCode = (TextView) findViewById(R.id.tx_code);
+        mReceiptSent = (TextView) findViewById(R.id.receipt_sent);
     }
 }

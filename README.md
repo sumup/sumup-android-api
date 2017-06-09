@@ -1,7 +1,5 @@
 # SumUp Android Payment API
 
-This documentation is intended for app versions 1.55.0 and up.
-
 ## I. Getting Started
 * Create a SumUp account and get an affiliate key <a href="https://me.sumup.com/developers" target="_blank">here</a>
 
@@ -32,18 +30,7 @@ allprojects {
 compile 'com.sumup:merchant-api:1.1.1'
 ```
 
-##### 3. Provide a callback activity
-```xml
-	<activity android:name="com.example.ResultActivity"  android:label="Payment Result">
-	  <intent-filter>
-	    <action android:name="com.example.ResultActivity"></action>
-	    <category android:name="android.intent.category.DEFAULT"></category>
-	    <category android:name="android.intent.category.BROWSABLE"></category>
-	  </intent-filter>
-	</activity>
-```
-
-##### 4. Make a payment
+##### 3. Make a payment
 ```java
     SumUpPayment payment = SumUpPayment.builder()
             //mandatory parameters
@@ -63,7 +50,17 @@ compile 'com.sumup:merchant-api:1.1.1'
             .foreignTransactionId(UUID.randomUUID().toString())  // can not exceed 128 chars
             .build();
 
-    SumUpAPI.openPaymentActivity(MainActivity.this, ResponseActivity.class, payment);
+    SumUpAPI.openPaymentActivity(MainActivity.this, payment, 1);
+```
+
+##### 4. Handle payment result
+```java
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      if (requestCode == 1 && data != null) {
+         // Handle the response here
+      }
+   }
 ```
 
 ## URI call
@@ -100,7 +97,7 @@ compile 'com.sumup:merchant-api:1.1.1'
                                 + "&foreign-tx-id=" + UUID.randomUUID().toString()
                                 + "&callback=mycallbackscheme://result"));
 
-                startActivityForResult(payIntent, 0);
+                startActivity(payIntent);
 ```
 
 The result is received as a URI in the callback activity intent: 
@@ -179,26 +176,3 @@ The response flags are provided within the Bundle that is passed back to the cal
 
 * smp-status: `success/failed`
 * smp-failure-cause (send it smp-status is `failed`): `transaction-failed/geolocation-required/invalid-param/invalid-token`
-
-# IV. Incubating feature
-
-##### 1. StartActivityForResult pattern with the API Helper
-
-*Only available for app versions 1.56.2 and up*
-
-If you prefer to receive the result of a transaction in the same Activity, open the PaymentActivity with :
- 
-```java
-   SumUpAPI.openPaymentActivity(MainActivity.this, payment, 1);
-```
-
-Then, you can react on the result of a transaction with : 
-
-```java
-   @Override
-   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (requestCode == 1 && data != null) {
-         // Handle the response here
-      }
-   }
-```

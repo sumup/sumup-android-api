@@ -17,15 +17,6 @@
             </intent-filter>
         </activity>
         <activity
-          android:name="com.sumup.apisampleapp.ResponseActivity"
-          android:label="Payment Result">
-            <intent-filter>
-                <action android:name="com.sumup.apisampleapp.ResponseActivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-            </intent-filter>
-        </activity>
-        <activity
           android:name="com.sumup.apisampleapp.URLResponseActivity"
           android:label="Payment Result">
             <intent-filter>
