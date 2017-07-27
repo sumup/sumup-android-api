@@ -47,6 +47,8 @@ public class MainActivity extends Activity {
                         .addAdditionalInfo("From", "Paris").addAdditionalInfo("To", "Berlin")
                         // optional: foreign transaction ID, must be unique!
                         .foreignTransactionId(UUID.randomUUID().toString()) // can not exceed 128 chars
+                        // optional: skip the success screen
+                        .skipSuccessScreen()
                         .build();
 
                 SumUpAPI.openPaymentActivity(MainActivity.this, payment, REQUEST_CODE_PAYMENT);
@@ -67,6 +69,8 @@ public class MainActivity extends Activity {
                                 + "&receipt-mobilephone=+3531234567890"
                                 + "&receipt-email=customer@mail.com"
                                 + "&foreign-tx-id=" + UUID.randomUUID().toString()
+                                // optional: skip the success screen
+                                + "&skip-screen-success=true"
                                 + "&callback=sumupsampleresult://result"));
 
                 startActivity(payIntent);

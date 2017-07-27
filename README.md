@@ -27,7 +27,7 @@ allprojects {
 
 ##### 2. Add the dependency to a module 
 ```groovy
-compile 'com.sumup:merchant-api:1.1.1'
+compile 'com.sumup:merchant-api:1.2.0'
 ```
 
 ##### 3. Make a payment
@@ -48,6 +48,8 @@ compile 'com.sumup:merchant-api:1.1.1'
             .addAdditionalInfo("To", "Berlin")
             //optional: foreign transaction ID, must be unique!
             .foreignTransactionId(UUID.randomUUID().toString())  // can not exceed 128 chars
+            // optional: skip the success screen
+	    .skipSuccessScreen()
             .build();
 
     SumUpAPI.openPaymentActivity(MainActivity.this, payment, 1);
@@ -95,6 +97,8 @@ compile 'com.sumup:merchant-api:1.1.1'
                                 + "&receipt-mobilephone=+3531234567890"
                                 + "&receipt-email=customer@mail.com"
                                 + "&foreign-tx-id=" + UUID.randomUUID().toString()
+                                // optional: skip the success screen
+                                + "&skip-screen-success=true"
                                 + "&callback=mycallbackscheme://result"));
 
                 startActivity(payIntent);
@@ -136,14 +140,9 @@ Failure:
 ?smp-status=failed&smp-failure-cause=transaction-failed&smp-message=Transaction%20failed.&smp-receipt-sent=false&smp-tx-code=123ABC
 ```
 
-# III. Additional features
+## III. Additional features
 
-##### 1. Include a transaction identifier
-
-When setting up the SumUpPayment object, it is possible to pass an optional foreignTransactionID parameter. This identifier will be associated with the transaction and can be used to retrieve this transaction later. See <a href="https://sumup.com/docs/rest-api/transactions-api" target="_blank">API documentation</a> for details. Please make sure that this ID is unique within the scope of the SumUp merchant account and sub-accounts. It must not be longer than 128 characters.
-The foreignTransactionID is available when the callback activity is called: `SumUpAPI.Param.FOREIGN_TRANSACTION_ID`
-
-##### 2. Response flags
+### 1. Response fields
 
 ##### a) With the API Helper
 
@@ -177,3 +176,19 @@ The response flags are provided within the Bundle that is passed back to the cal
 
 * smp-status: `success/failed`
 * smp-failure-cause (send it smp-status is `failed`): `transaction-failed/geolocation-required/invalid-param/invalid-token`
+
+
+### 2. Additional checkout parameters
+
+#### Transaction identifier
+The `foreignTransactionID` identifier will be associated with the transaction and can be used to retrieve details related to the transaction. See [API documentation](https://sumup.com/docs/rest-api/transactions-api) for details. Please make sure that this ID is unique within the scope of the SumUp merchant account and sub-accounts. It must not be longer than 128 characters.
+The foreignTransactionID is available when the callback activity is called: `SumUpAPI.Param.FOREIGN_TRANSACTION_ID`
+
+#### Skip success screen
+To skip the screen shown at the end of a successful transaction, the `skipSuccessScreen` parameter can be used. When using the parameter  your application is responsible for displaying the transaction result to the customer. In combination with the Receipts API your application can also send your own receipts, see [API documentation](https://sumup.com/docs/rest-api/transactions-api) for details. Please note success screens will still be shown when using the SumUp Air Lite readers.
+
+## Community
+- **Questions?** Get in contact with our integration team by sending an email to
+<a href="mailto:integration@sumup.com">integration@sumup.com</a>.
+- **Found a bug?** [Open an issue](https://github.com/sumup/sumup-android-api/issues/new).
+Please provide as much information as possible.
