@@ -27,7 +27,7 @@ allprojects {
 
 ##### 2. Add the dependency to a module 
 ```groovy
-compile 'com.sumup:merchant-api:1.3.0'
+compile 'com.sumup:merchant-api:1.3.1'
 ```
 
 ##### 3. Make a payment
