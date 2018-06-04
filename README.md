@@ -27,7 +27,7 @@ allprojects {
 
 ##### 2. Add the dependency to a module 
 ```groovy
-compile 'com.sumup:merchant-api:1.3.1'
+compile 'com.sumup:merchant-api:1.4.0'
 ```
 
 ##### 3. Make a payment
@@ -36,10 +36,10 @@ compile 'com.sumup:merchant-api:1.3.1'
             //mandatory parameters
             // Please go to https://me.sumup.com/developers to get your Affiliate Key by entering the application ID of your app. (e.g. com.sumup.sdksampleapp)
             .affiliateKey("YOUR_AFFILIATE_KEY")
-            .productAmount(1.23)
+            .total(new BigDecimal("1.23"))
             .currency(SumUpPayment.Currency.EUR)
             // optional: add details
-            .productTitle("Taxi Ride")
+            .title("Taxi Ride")
             .receiptEmail("customer@mail.com")
             .receiptSMS("+3531234567890")
             // optional: Add metadata
@@ -52,7 +52,7 @@ compile 'com.sumup:merchant-api:1.3.1'
 	    .skipSuccessScreen()
             .build();
 
-    SumUpAPI.openPaymentActivity(MainActivity.this, payment, 1);
+    SumUpAPI.checkout(MainActivity.this, payment, 1);
 ```
 
 ##### 4. Handle payment result
@@ -91,7 +91,7 @@ compile 'com.sumup:merchant-api:1.3.1'
                         "sumupmerchant://pay/1.0"
                                 + "?affiliate-key="YOUR_AFFILIATE_KEY""
                                 + "&app-id=com.example.myapp"
-                                + "&amount=1.23"
+                                + "&total=1.23" // field available from App version 1.88.0 and above. Otherwise keep deprecated field "amount".
                                 + "&currency=EUR"
                                 + "&title=Taxi Ride"
                                 + "&receipt-mobilephone=+3531234567890"
@@ -125,8 +125,10 @@ mycallbackscheme://result?smp-status=failed&smp-failure-cause=transaction-failed
 Put a link onto your website
 
 ```
-<a href="sumupmerchant://pay/1.0?affiliate-key=7ca84f17-84a5-4140-8df6-6ebeed8540fc&app-id=com.example.myapp&amount=1.23&currency=EUR&title=Taxi Ride&receipt-mobilephone=+3531234567890&receipt-email=customer@mail.com&callback=http://example.com/myapp/mycallback">Start SumUp Payment</a>
+<a href="sumupmerchant://pay/1.0?affiliate-key=7ca84f17-84a5-4140-8df6-6ebeed8540fc&app-id=com.example.myapp&total=1.23&currency=EUR&title=Taxi Ride&receipt-mobilephone=+3531234567890&receipt-email=customer@mail.com&callback=http://example.com/myapp/mycallback">Start SumUp Payment</a>
 ```
+
+Note that field `total` is available from App version 1.88.0 and above. Keep deprecated field `amount` if still supporting older versions of the SumUp App.
 
 Make sure that the callback URL you provide is correct and controlled by you.
 
@@ -154,8 +156,9 @@ Several response flags are available when the callback activity is called :
     * SumUpAPI.Response.ResultCode.ERROR_TRANSACTION_FAILED = 2
     * SumUpAPI.Response.ResultCode.ERROR_GEOLOCATION_REQUIRED = 3
     * SumUpAPI.Response.ResultCode.ERROR_INVALID_PARAM = 4
-    * SumUpAPI.Response.ResultCode.ERROR_INVALID_TOKEN = 5
     * SumUpAPI.Response.ResultCode.ERROR_NO_CONNECTIVITY = 6
+    * SumUpAPI.Response.ResultCode.ERROR_DUPLICATE_FOREIGN_TX_ID = 9;
+    * SumUpAPI.Response.ResultCode.ERROR_INVALID_AFFILIATE_KEY = 10;
 * SumUpAPI.Response.MESSAGE
   * Type : String
   * Description : A human readable message describing the result of the payment
@@ -181,11 +184,11 @@ The response flags are provided within the Bundle that is passed back to the cal
 ### 2. Additional checkout parameters
 
 #### Transaction identifier
-The `foreignTransactionID` identifier will be associated with the transaction and can be used to retrieve details related to the transaction. See [API documentation](https://sumup.com/docs/rest-api/transactions-api) for details. Please make sure that this ID is unique within the scope of the SumUp merchant account and sub-accounts. It must not be longer than 128 characters.
+The `foreignTransactionID` identifier will be associated with the transaction and can be used to retrieve details related to the transaction. See [API documentation](http://docs.sumup.com/rest-api/transactions-api/) for details. Please make sure that this ID is unique within the scope of the SumUp merchant account and sub-accounts. It must not be longer than 128 characters.
 The foreignTransactionID is available when the callback activity is called: `SumUpAPI.Param.FOREIGN_TRANSACTION_ID`
 
 #### Skip success screen
-To skip the screen shown at the end of a successful transaction, the `skipSuccessScreen` parameter can be used. When using the parameter  your application is responsible for displaying the transaction result to the customer. In combination with the Receipts API your application can also send your own receipts, see [API documentation](https://sumup.com/docs/rest-api/transactions-api) for details. Please note success screens will still be shown when using the SumUp Air Lite readers.
+To skip the screen shown at the end of a successful transaction, the `skipSuccessScreen` parameter can be used. When using the parameter  your application is responsible for displaying the transaction result to the customer. In combination with the Receipts API your application can also send your own receipts, see [API documentation](http://docs.sumup.com/rest-api/transactions-api/) for details. Please note success screens will still be shown when using the SumUp Air Lite readers.
 
 ## Community
 - **Questions?** Get in contact with our integration team by sending an email to

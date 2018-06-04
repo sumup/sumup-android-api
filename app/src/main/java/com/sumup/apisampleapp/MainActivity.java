@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpPayment;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class MainActivity extends Activity {
@@ -37,9 +38,9 @@ public class MainActivity extends Activity {
                         // mandatory parameters
                         // Please go to https://me.sumup.com/developers to get your Affiliate Key by entering the application ID of your app. (e.g. com.sumup.sdksampleapp)
                         .affiliateKey("7ca84f17-84a5-4140-8df6-6ebeed8540fc")
-                        .productAmount(1.23)
+                        .total(new BigDecimal("1.23"))
                         .currency(SumUpPayment.Currency.EUR)// optional: add details
-                        .productTitle("Taxi Ride")
+                        .title("Taxi Ride")
                         .receiptEmail("customer@mail.com")
                         .receiptSMS("+3531234567890")
                         // optional: Add metadata
@@ -51,7 +52,7 @@ public class MainActivity extends Activity {
                         .skipSuccessScreen()
                         .build();
 
-                SumUpAPI.openPaymentActivity(MainActivity.this, payment, REQUEST_CODE_PAYMENT);
+                SumUpAPI.checkout(MainActivity.this, payment, REQUEST_CODE_PAYMENT);
             }
         });
 
@@ -63,7 +64,7 @@ public class MainActivity extends Activity {
                         "sumupmerchant://pay/1.0"
                                 + "?affiliate-key=7ca84f17-84a5-4140-8df6-6ebeed8540fc"
                                 + "&app-id=com.sumup.apisampleapp"
-                                + "&amount=1.23"
+                                + "&total=1.23" // field available from App version 1.88.0 and above. Otherwise keep deprecated field "amount"
                                 + "&currency=EUR"
                                 + "&title=Taxi Ride"
                                 + "&receipt-mobilephone=+3531234567890"
