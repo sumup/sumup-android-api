@@ -12,7 +12,7 @@
 
 The sample app provided in this repository can be used as a reference.
 
-<a href="https://sumup.com/docs" target="_blank">Full SumUp API Documentation</a>
+<a href="https://docs.sumup.com/" target="_blank">Full SumUp API Documentation</a>
 
 ## API Helper
 
