@@ -13,6 +13,12 @@ public class URLResponseActivity extends Activity {
     setContentView(R.layout.activity_url_response);
 
     final Uri uri = getIntent().getData();
-    ((TextView) findViewById(R.id.result)).setText("Result: " + uri.toString());
+    TextView resultView = (TextView) findViewById(R.id.result);
+    if (uri == null) {
+      resultView.setText(R.string.callback_result_missing);
+      return;
+    }
+
+    resultView.setText(getString(R.string.callback_result_format, uri.toString()));
   }
 }

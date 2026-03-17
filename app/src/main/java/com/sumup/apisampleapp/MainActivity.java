@@ -96,14 +96,17 @@ public class MainActivity extends Activity {
         if (data != null) {
           Bundle extra = data.getExtras();
 
-          mResultCode.setText("Result code: " + extra.getInt(SumUpAPI.Response.RESULT_CODE));
-          mResultMessage.setText("Message: " + extra.getString(SumUpAPI.Response.MESSAGE));
+          mResultCode.setText(
+              getString(R.string.result_code_format, extra.getInt(SumUpAPI.Response.RESULT_CODE)));
+          mResultMessage.setText(
+              getString(R.string.message_format, extra.getString(SumUpAPI.Response.MESSAGE)));
 
           String txCode = extra.getString(SumUpAPI.Response.TX_CODE);
-          mTxCode.setText(txCode == null ? "" : "Transaction Code: " + txCode);
+          mTxCode.setText(
+              txCode == null ? "" : getString(R.string.transaction_code_format, txCode));
 
           boolean receiptSent = extra.getBoolean(SumUpAPI.Response.RECEIPT_SENT);
-          mReceiptSent.setText("Receipt sent: " + receiptSent);
+          mReceiptSent.setText(getString(R.string.receipt_sent_format, receiptSent));
         }
         break;
       default:

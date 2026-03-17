@@ -12,7 +12,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
-      android:text="Charge (Intent"
+      android:text="@string/charge_intent_button"
       android:layout_gravity="center"/>
 
     <Button
@@ -20,7 +20,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
-      android:text="Charge (URI)"
+      android:text="@string/charge_uri_button"
       android:layout_gravity="center"/>
 
     <ScrollView
@@ -38,7 +38,7 @@
        android:layout_height="wrap_content"
        android:textSize="18sp"
        android:padding="8dp"
-       tools:text="Result code: -"
+       tools:text="@string/result_placeholder"
        android:layout_gravity="center"/>
 
       <TextView
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:padding="8dp"
-        tools:text="Message: -"
+        tools:text="@string/message_placeholder"
         android:layout_gravity="center"/>
 
       <TextView
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:padding="8dp"
-        tools:text="Transaction Code: -"
+        tools:text="@string/transaction_code_placeholder"
         android:layout_gravity="center"/>
 
       <TextView
@@ -65,15 +65,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:padding="8dp"
-        tools:text="Receipt sent : -"/>
-
-      <TextView
-        android:id="@+id/tx_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:padding="8dp"
-        tools:text="Transaction Info : -"/>
+        tools:text="@string/receipt_sent_placeholder"/>
 
     </LinearLayout>
   </ScrollView>
