@@ -3,7 +3,6 @@ package com.sumup.apisampleapp;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class URLResponseActivity extends AppCompatActivity {
