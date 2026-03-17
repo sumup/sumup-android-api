@@ -1,18 +1,18 @@
 package com.sumup.apisampleapp;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpPayment;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
   private static final String AFFILIATE_KEY = "REPLACE_WITH_YOUR_AFFILIATE_KEY";
   private static final String APP_ID = "com.sumup.apisampleapp";
@@ -94,28 +94,25 @@ public class MainActivity extends Activity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
     resetViews();
 
-    switch (requestCode) {
-      case REQUEST_CODE_PAYMENT:
-        if (data != null) {
-          Bundle extra = data.getExtras();
+    if (requestCode == REQUEST_CODE_PAYMENT && data != null) {
+      Bundle extra = data.getExtras();
+      if (extra == null) {
+        return;
+      }
 
-          mResultCode.setText(
-              getString(R.string.result_code_format, extra.getInt(SumUpAPI.Response.RESULT_CODE)));
-          mResultMessage.setText(
-              getString(R.string.message_format, extra.getString(SumUpAPI.Response.MESSAGE)));
+      mResultCode.setText(
+          getString(R.string.result_code_format, extra.getInt(SumUpAPI.Response.RESULT_CODE)));
+      mResultMessage.setText(
+          getString(R.string.message_format, extra.getString(SumUpAPI.Response.MESSAGE)));
 
-          String txCode = extra.getString(SumUpAPI.Response.TX_CODE);
-          mTxCode.setText(
-              txCode == null ? "" : getString(R.string.transaction_code_format, txCode));
+      String txCode = extra.getString(SumUpAPI.Response.TX_CODE);
+      mTxCode.setText(txCode == null ? "" : getString(R.string.transaction_code_format, txCode));
 
-          boolean receiptSent = extra.getBoolean(SumUpAPI.Response.RECEIPT_SENT);
-          mReceiptSent.setText(getString(R.string.receipt_sent_format, receiptSent));
-        }
-        break;
-      default:
-        break;
+      boolean receiptSent = extra.getBoolean(SumUpAPI.Response.RECEIPT_SENT);
+      mReceiptSent.setText(getString(R.string.receipt_sent_format, receiptSent));
     }
   }
 
