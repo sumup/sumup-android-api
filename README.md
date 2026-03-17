@@ -9,8 +9,7 @@
 
 </div>
 
-This repository contains a sample Android app for the SumUp Payment API and the
-legacy `com.sumup:merchant-api` helper artifact.
+This repository contains a sample Android app for the SumUp Payment API and the legacy `com.sumup:merchant-api` helper artifact.
 
 Use it when you want to:
 
@@ -18,15 +17,13 @@ Use it when you want to:
 - start a SumUp checkout via the `sumupmerchant://pay/1.0` URI contract
 - receive the checkout result back in your app or website
 
-The sample app in this repository is a reference implementation for the
-integration contract. Full platform documentation lives at
+The sample app in this repository is a reference implementation for the integration contract. Full platform documentation lives at
 [developer.sumup.com](https://developer.sumup.com).
 
 ## Getting Started
 
 1. Create a SumUp account.
-2. Generate an affiliate key in
-   [me.sumup.com/developers](https://me.sumup.com/developers).
+2. Generate an affiliate key in [me.sumup.com/developers](https://me.sumup.com/developers).
 3. Choose the integration path you need:
    - `API Helper`: native Android app using `com.sumup:merchant-api`
    - `URI call`: Android app or mobile website using the `sumupmerchant://` URI
@@ -184,9 +181,7 @@ Put a link like this on your website:
 </a>
 ```
 
-`total` is available from SumUp app version `1.88.0` and above. If you still
-need to support older SumUp app versions, keep sending the deprecated `amount`
-field as a fallback.
+`total` is available from SumUp app version `1.88.0` and above. If you still need to support older SumUp app versions, keep sending the deprecated `amount` field as a fallback.
 
 Make sure the callback URL is controlled by you.
 
@@ -235,9 +230,7 @@ Known `RESULT_CODE` values:
 
 ### Transaction Identifier
 
-`foreignTransactionId` is associated with the transaction and can be used later
-to retrieve transaction details. It must be unique within the SumUp merchant
-account scope and must not exceed 128 characters.
+`foreignTransactionId` is associated with the transaction and can be used later to retrieve transaction details. It must be unique within the SumUp merchant account scope and must not exceed 128 characters.
 
 It is available in the callback activity as:
 
@@ -248,9 +241,7 @@ String foreignTransactionId = extras.getString(SumUpAPI.Param.FOREIGN_TRANSACTIO
 
 ### Skip Success Screen
 
-When `skipSuccessScreen` is enabled, your application becomes responsible for
-showing the final transaction state to the customer. Success screens can still
-be shown when using SumUp Air Lite readers.
+When `skipSuccessScreen` is enabled, your application becomes responsible for showing the final transaction state to the customer. Success screens can still be shown when using SumUp Air Lite readers.
 
 ## Community
 
