@@ -7,12 +7,12 @@ import android.widget.TextView;
 
 public class URLResponseActivity extends Activity {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_url_response);
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_url_response);
 
-        final Uri uri = getIntent().getData();
-        ((TextView) findViewById(R.id.result)).setText("Result: " + uri.toString());
-    }
+    final Uri uri = getIntent().getData();
+    ((TextView) findViewById(R.id.result)).setText("Result: " + uri.toString());
+  }
 }

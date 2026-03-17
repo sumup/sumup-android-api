@@ -27,5 +27,5 @@ jobs:
       - name: Install Android SDK packages
         run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Verify debug build
-        run: ./gradlew --no-daemon assembleDebug lintDebug
+      - name: Verify formatting, lint, and debug build
+        run: ./gradlew --no-daemon spotlessCheck lintDebug assembleDebug

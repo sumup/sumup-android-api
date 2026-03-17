@@ -1,3 +1,25 @@
 plugins {
-    id 'com.android.application' version '8.13.0' apply false
+	id 'com.android.application' version '8.13.0' apply false
+	id 'com.diffplug.spotless' version '8.3.0'
+}
+
+spotless {
+	java {
+		target 'app/src/**/*.java'
+		googleJavaFormat()
+		removeUnusedImports()
+		endWithNewline()
+	}
+
+	groovyGradle {
+		target '*.gradle'
+		greclipse()
+		endWithNewline()
+	}
+
+	format 'misc', {
+		target '.editorconfig', '.gitignore', '.github/**/*.yml'
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
 }
