@@ -2,7 +2,7 @@
 
 # SumUp Android Payment API
 
-[![Documentation](https://img.shields.io/badge/docs-developer.sumup.com-0A2540)](https://developer.sumup.com)
+[![Documentation](https://img.shields.io/badge/docs-docs.sumup.com-0A2540)](https://docs.sumup.com)
 [![CI Status](https://github.com/sumup/sumup-android-api/actions/workflows/ci.yaml/badge.svg)](https://github.com/sumup/sumup-android-api/actions/workflows/ci.yaml)
 [![License](https://img.shields.io/github/license/sumup/sumup-android-api)](./LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Android-3DDC84)](https://developer.android.com)
@@ -17,8 +17,7 @@ Use it when you want to:
 - start a SumUp checkout via the `sumupmerchant://pay/1.0` URI contract
 - receive the checkout result back in your app or website
 
-The sample app in this repository is a reference implementation for the integration contract. Full platform documentation lives at
-[developer.sumup.com](https://developer.sumup.com).
+The sample app in this repository can be used as a reference implementation for the integration contract. Full SumUp API documentation lives at [docs.sumup.com](https://docs.sumup.com).
 
 ## Getting Started
 
