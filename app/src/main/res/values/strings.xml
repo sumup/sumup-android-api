@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SumUp API Sample App</string>
+    <string name="payment_result_title">Payment Result</string>
+    <string name="charge_intent_button">Charge (Intent)</string>
+    <string name="charge_uri_button">Charge (URI)</string>
+    <string name="result_code_format">Result code: %1$d</string>
+    <string name="message_format">Message: %1$s</string>
+    <string name="transaction_code_format">Transaction Code: %1$s</string>
+    <string name="receipt_sent_format">Receipt sent: %1$b</string>
+    <string name="result_placeholder">Result code: -</string>
+    <string name="message_placeholder">Message: -</string>
+    <string name="transaction_code_placeholder">Transaction Code: -</string>
+    <string name="receipt_sent_placeholder">Receipt sent: -</string>
+    <string name="callback_result_format">Result: %1$s</string>
+    <string name="callback_result_missing">Result: no callback data received</string>
 </resources>
