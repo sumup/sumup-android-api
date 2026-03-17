@@ -1,4 +1,13 @@
+<div align="center">
+
 # SumUp Android Payment API
+
+[![Documentation](https://img.shields.io/badge/docs-developer.sumup.com-0A2540)](https://developer.sumup.com)
+[![CI Status](https://github.com/sumup/sumup-android-api/actions/workflows/ci.yaml/badge.svg)](https://github.com/sumup/sumup-android-api/actions/workflows/ci.yaml)
+[![License](https://img.shields.io/github/license/sumup/sumup-android-api)](./LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Android-3DDC84)](https://developer.android.com)
+
+</div>
 
 This repository contains a sample Android app for the SumUp Payment API and the
 legacy `com.sumup:merchant-api` helper artifact.
@@ -11,14 +20,14 @@ Use it when you want to:
 
 The sample app in this repository is a reference implementation for the
 integration contract. Full platform documentation lives at
-[docs.sumup.com](https://docs.sumup.com).
+[developer.sumup.com](https://developer.sumup.com).
 
-## Getting started
+## Getting Started
 
 1. Create a SumUp account.
 2. Generate an affiliate key in
    [me.sumup.com/developers](https://me.sumup.com/developers).
-3. Decide which integration path you need:
+3. Choose the integration path you need:
    - `API Helper`: native Android app using `com.sumup:merchant-api`
    - `URI call`: Android app or mobile website using the `sumupmerchant://` URI
 
@@ -101,7 +110,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-## URI call
+## URI Call
 
 ### Provide a callback activity
 
@@ -165,7 +174,7 @@ Failure:
 mycallbackscheme://result?smp-status=failed&smp-failure-cause=transaction-failed&smp-message=Transaction%20failed.&smp-receipt-sent=false&smp-tx-code=123ABC&foreign-tx-id=05c14c86-a7a0-49c5-a1ec-acb168f5198x
 ```
 
-## Payment API for mobile web
+## Payment API for Mobile Web
 
 Put a link like this on your website:
 
@@ -193,7 +202,7 @@ Failure:
 ?smp-status=failed&smp-failure-cause=transaction-failed&smp-message=Transaction%20failed.&smp-receipt-sent=false&smp-tx-code=123ABC
 ```
 
-## Response fields
+## Response Fields
 
 ### API Helper
 
@@ -214,7 +223,7 @@ Known `RESULT_CODE` values:
 - `SumUpAPI.Response.ResultCode.ERROR_DUPLICATE_FOREIGN_TX_ID = 9`
 - `SumUpAPI.Response.ResultCode.ERROR_INVALID_AFFILIATE_KEY = 10`
 
-### URI call and mobile web
+### URI Call and Mobile Web
 
 - `smp-status`: `success` or `failed`
 - `smp-failure-cause`: present when `smp-status=failed`
@@ -222,9 +231,9 @@ Known `RESULT_CODE` values:
   `transaction-failed`, `geolocation-required`, `invalid-param`,
   `invalid-token`
 
-## Additional checkout parameters
+## Additional Checkout Parameters
 
-### Transaction identifier
+### Transaction Identifier
 
 `foreignTransactionId` is associated with the transaction and can be used later
 to retrieve transaction details. It must be unique within the SumUp merchant
@@ -237,7 +246,7 @@ Bundle extras = data.getExtras();
 String foreignTransactionId = extras.getString(SumUpAPI.Param.FOREIGN_TRANSACTION_ID);
 ```
 
-### Skip success screen
+### Skip Success Screen
 
 When `skipSuccessScreen` is enabled, your application becomes responsible for
 showing the final transaction state to the customer. Success screens can still
