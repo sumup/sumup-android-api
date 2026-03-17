@@ -1,4 +1,4 @@
-name: Android Smoke Check
+name: CI
 
 on:
   pull_request:
@@ -27,11 +27,11 @@ jobs:
       - name: Install Android SDK packages
         run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Check formatting
+      - name: Format
         run: ./gradlew --no-daemon spotlessCheck
 
-      - name: Run Android lint
+      - name: Lint
         run: ./gradlew --no-daemon lintDebug
 
-      - name: Assemble debug build
+      - name: Debug build
         run: ./gradlew --no-daemon assembleDebug
