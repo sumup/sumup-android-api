@@ -21,6 +21,6 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.sumup:merchant-api:1.4.0'
 }
