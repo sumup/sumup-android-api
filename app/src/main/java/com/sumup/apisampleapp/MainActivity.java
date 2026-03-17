@@ -14,6 +14,9 @@ import java.util.UUID;
 
 public class MainActivity extends Activity {
 
+  private static final String AFFILIATE_KEY = "REPLACE_WITH_YOUR_AFFILIATE_KEY";
+  private static final String APP_ID = "com.sumup.apisampleapp";
+  private static final String CALLBACK_URI = "sumupsampleresult://result";
   private static final int REQUEST_CODE_PAYMENT = 2;
 
   private TextView mResultCode;
@@ -38,7 +41,7 @@ public class MainActivity extends Activity {
                     // mandatory parameters
                     // Please go to https://me.sumup.com/developers to get your Affiliate Key by
                     // entering the application ID of your app. (e.g. com.sumup.sdksampleapp)
-                    .affiliateKey("7ca84f17-84a5-4140-8df6-6ebeed8540fc")
+                    .affiliateKey(AFFILIATE_KEY)
                     .total(new BigDecimal("1.23"))
                     .currency(SumUpPayment.Currency.EUR) // optional: add details
                     .title("Taxi Ride")
@@ -63,25 +66,27 @@ public class MainActivity extends Activity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            Intent payIntent =
-                new Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(
-                        "sumupmerchant://pay/1.0"
-                            + "?affiliate-key=7ca84f17-84a5-4140-8df6-6ebeed8540fc"
-                            + "&app-id=com.sumup.apisampleapp"
-                            + "&total=1.23" // field available from App version 1.88.0 and above.
-                            // Otherwise keep deprecated field "amount"
-                            + "&currency=EUR"
-                            + "&title=Taxi Ride"
-                            + "&receipt-mobilephone=+3531234567890"
-                            + "&receipt-email=customer@mail.com"
-                            + "&foreign-tx-id="
-                            + UUID.randomUUID().toString()
-                            // optional: skip the success screen
-                            + "&skip-screen-success=true"
-                            + "&callback=sumupsampleresult://result"));
+            Uri payUri =
+                new Uri.Builder()
+                    .scheme("sumupmerchant")
+                    .authority("pay")
+                    .appendPath("1.0")
+                    .appendQueryParameter("affiliate-key", AFFILIATE_KEY)
+                    .appendQueryParameter("app-id", APP_ID)
+                    // field available from App version 1.88.0 and above. Otherwise keep
+                    // deprecated field "amount"
+                    .appendQueryParameter("total", "1.23")
+                    .appendQueryParameter("currency", "EUR")
+                    .appendQueryParameter("title", "Taxi Ride")
+                    .appendQueryParameter("receipt-mobilephone", "+3531234567890")
+                    .appendQueryParameter("receipt-email", "customer@mail.com")
+                    .appendQueryParameter("foreign-tx-id", UUID.randomUUID().toString())
+                    // optional: skip the success screen
+                    .appendQueryParameter("skip-screen-success", "true")
+                    .appendQueryParameter("callback", CALLBACK_URI)
+                    .build();
 
+            Intent payIntent = new Intent(Intent.ACTION_VIEW, payUri);
             startActivity(payIntent);
           }
         });
