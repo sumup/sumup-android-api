@@ -1,11 +1,12 @@
 package com.sumup.apisampleapp;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class URLResponseActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class URLResponseActivity extends AppCompatActivity {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
