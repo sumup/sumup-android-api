@@ -1,197 +1,250 @@
 # SumUp Android Payment API
 
-## I. Getting Started
-* Create a SumUp account and get an affiliate key <a href="https://me.sumup.com/developers" target="_blank">here</a>
+This repository contains a sample Android app for the SumUp Payment API and the
+legacy `com.sumup:merchant-api` helper artifact.
 
-## II. How to call the Payment API
+Use it when you want to:
 
-* **From your app**  
-  * [Option 1](#api-helper) - Use our API Helper library for easy integration
-  * [Option 2](#uri-call) - Use a URI to call the API 
-* **From your mobile website** [Payment API - Web](#payment-api---web)
+- start a SumUp checkout from a native Android app
+- start a SumUp checkout via the `sumupmerchant://pay/1.0` URI contract
+- receive the checkout result back in your app or website
 
-The sample app provided in this repository can be used as a reference.
+The sample app in this repository is a reference implementation for the
+integration contract. Full platform documentation lives at
+[docs.sumup.com](https://docs.sumup.com).
 
-<a href="https://docs.sumup.com" target="_blank">Full SumUp API Documentation</a>
+## Getting started
+
+1. Create a SumUp account.
+2. Generate an affiliate key in
+   [me.sumup.com/developers](https://me.sumup.com/developers).
+3. Decide which integration path you need:
+   - `API Helper`: native Android app using `com.sumup:merchant-api`
+   - `URI call`: Android app or mobile website using the `sumupmerchant://` URI
 
 ## API Helper
 
-##### 1. Add the repository to your gradle dependencies
+### Recommended Gradle setup
+
+Add the SumUp Maven repository to `settings.gradle`:
+
 ```groovy
-allprojects {
-   repositories {
-      maven { url 'https://maven.sumup.com/releases' }
-   }
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://maven.sumup.com/releases") }
+    }
 }
 ```
 
-##### 2. Add the dependency to a module 
+Add the dependency to your Android module:
+
 ```groovy
-compile 'com.sumup:merchant-api:1.4.0'
+dependencies {
+    implementation "com.sumup:merchant-api:1.4.0"
+}
 ```
 
-##### 3. Make a payment
-```java
-    SumUpPayment payment = SumUpPayment.builder()
-            //mandatory parameters
-            // Please go to https://me.sumup.com/developers to get your Affiliate Key by entering the application ID of your app. (e.g. com.sumup.sdksampleapp)
-            .affiliateKey("YOUR_AFFILIATE_KEY")
-            .total(new BigDecimal("1.23"))
-            .currency(SumUpPayment.Currency.EUR)
-            // optional: add details
-            .title("Taxi Ride")
-            .receiptEmail("customer@mail.com")
-            .receiptSMS("+3531234567890")
-            // optional: Add metadata
-            .addAdditionalInfo("AccountId", "taxi0334")
-            .addAdditionalInfo("From", "Paris")
-            .addAdditionalInfo("To", "Berlin")
-            //optional: foreign transaction ID, must be unique!
-            .foreignTransactionId(UUID.randomUUID().toString())  // can not exceed 128 chars
-            // optional: skip the success screen
-	    .skipSuccessScreen()
-            .build();
+### Legacy Gradle setup
 
-    SumUpAPI.checkout(MainActivity.this, payment, 1);
+If you still use older Gradle builds, the repository can be added like this:
+
+```groovy
+allprojects {
+    repositories {
+        maven { url "https://maven.sumup.com/releases" }
+    }
+}
 ```
 
-##### 4. Handle payment result
+### Make a payment
+
 ```java
-   @Override
-   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (requestCode == 1 && data != null) {
-         // Handle the response here
-      }
-   }
+SumUpPayment payment = SumUpPayment.builder()
+        .affiliateKey("YOUR_AFFILIATE_KEY")
+        .total(new BigDecimal("1.23"))
+        .currency(SumUpPayment.Currency.EUR)
+        .title("Taxi Ride")
+        .receiptEmail("customer@mail.com")
+        .receiptSMS("+3531234567890")
+        .addAdditionalInfo("AccountId", "taxi0334")
+        .addAdditionalInfo("From", "Paris")
+        .addAdditionalInfo("To", "Berlin")
+        .foreignTransactionId(UUID.randomUUID().toString())
+        .skipSuccessScreen()
+        .build();
+
+SumUpAPI.checkout(this, payment, REQUEST_CODE_PAYMENT);
+```
+
+### Handle the payment result
+
+```java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode != REQUEST_CODE_PAYMENT || data == null) {
+        return;
+    }
+
+    Bundle extras = data.getExtras();
+    if (extras == null) {
+        return;
+    }
+
+    int sumUpResultCode = extras.getInt(SumUpAPI.Response.RESULT_CODE);
+    String message = extras.getString(SumUpAPI.Response.MESSAGE);
+    String txCode = extras.getString(SumUpAPI.Response.TX_CODE);
+    boolean receiptSent = extras.getBoolean(SumUpAPI.Response.RECEIPT_SENT);
+}
 ```
 
 ## URI call
 
-##### 1. Provide a callback activity
+### Provide a callback activity
+
 ```xml
-    <activity
-          android:name="com.example.URLResponseActivity"
-          android:label="Payment Result">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <action android:name="com.example.URLResponseActivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <!-- Provide your own scheme here and reference it when you make a payment -->
-                 <data
-                   android:scheme="mycallbackscheme"
-                   android:host="result"/>
-            </intent-filter>
-        </activity>
+<activity
+    android:name="com.example.URLResponseActivity"
+    android:exported="true"
+    android:label="Payment Result">
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <action android:name="com.example.URLResponseActivity" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+            android:host="result"
+            android:scheme="mycallbackscheme" />
+    </intent-filter>
+</activity>
 ```
 
-##### 2. Make a  payment
-```java
-  Intent payIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(
-                        "sumupmerchant://pay/1.0"
-                                + "?affiliate-key="YOUR_AFFILIATE_KEY""
-                                + "&app-id=com.example.myapp"
-                                + "&total=1.23" // field available from App version 1.88.0 and above. Otherwise keep deprecated field "amount".
-                                + "&currency=EUR"
-                                + "&title=Taxi Ride"
-                                + "&receipt-mobilephone=+3531234567890"
-                                + "&receipt-email=customer@mail.com"
-                                + "&foreign-tx-id=" + UUID.randomUUID().toString()
-                                // optional: skip the success screen
-                                + "&skip-screen-success=true"
-                                + "&callback=mycallbackscheme://result"));
+### Make a payment
 
-                startActivity(payIntent);
+```java
+Uri checkoutUri = new Uri.Builder()
+        .scheme("sumupmerchant")
+        .authority("pay")
+        .appendPath("1.0")
+        .appendQueryParameter("affiliate-key", "YOUR_AFFILIATE_KEY")
+        .appendQueryParameter("app-id", "com.example.myapp")
+        .appendQueryParameter("total", "1.23")
+        .appendQueryParameter("currency", "EUR")
+        .appendQueryParameter("title", "Taxi Ride")
+        .appendQueryParameter("receipt-mobilephone", "+3531234567890")
+        .appendQueryParameter("receipt-email", "customer@mail.com")
+        .appendQueryParameter("foreign-tx-id", UUID.randomUUID().toString())
+        .appendQueryParameter("skip-screen-success", "true")
+        .appendQueryParameter("callback", "mycallbackscheme://result")
+        .build();
+
+Intent payIntent = new Intent(Intent.ACTION_VIEW, checkoutUri);
+startActivity(payIntent);
 ```
 
-The result is received as a URI in the callback activity intent: 
+The result is received as a URI in the callback activity:
 
 ```java
-Uri result = getIntent().getData()
+Uri result = getIntent().getData();
 ```
 
 Success:
-```
+
+```text
 mycallbackscheme://result?smp-status=success&smp-message=Transaction%20successful.&smp-receipt-sent=false&smp-tx-code=123ABC&foreign-tx-id=0558637a-b73c-43ad-b358-f93cb909251x
 ```
 
 Failure:
-```
+
+```text
 mycallbackscheme://result?smp-status=failed&smp-failure-cause=transaction-failed&smp-message=Transaction%20failed.&smp-receipt-sent=false&smp-tx-code=123ABC&foreign-tx-id=05c14c86-a7a0-49c5-a1ec-acb168f5198x
 ```
 
-### Payment API - Web
+## Payment API for mobile web
 
-Put a link onto your website
+Put a link like this on your website:
 
+```html
+<a href="sumupmerchant://pay/1.0?affiliate-key=YOUR_AFFILIATE_KEY&app-id=com.example.myapp&total=1.23&currency=EUR&title=Taxi%20Ride&receipt-mobilephone=%2B3531234567890&receipt-email=customer%40mail.com&callback=https%3A%2F%2Fexample.com%2Fmyapp%2Fmycallback">
+  Start SumUp Payment
+</a>
 ```
-<a href="sumupmerchant://pay/1.0?affiliate-key=7ca84f17-84a5-4140-8df6-6ebeed8540fc&app-id=com.example.myapp&total=1.23&currency=EUR&title=Taxi Ride&receipt-mobilephone=+3531234567890&receipt-email=customer@mail.com&callback=http://example.com/myapp/mycallback">Start SumUp Payment</a>
-```
 
-Note that field `total` is available from App version 1.88.0 and above. Keep deprecated field `amount` if still supporting older versions of the SumUp App.
+`total` is available from SumUp app version `1.88.0` and above. If you still
+need to support older SumUp app versions, keep sending the deprecated `amount`
+field as a fallback.
 
-Make sure that the callback URL you provide is correct and controlled by you.
+Make sure the callback URL is controlled by you.
 
 Success:
-```
+
+```text
 ?smp-status=success&smp-message=Transaction%20successful.&smp-receipt-sent=false&smp-tx-code=123ABC
 ```
 
 Failure:
-```
+
+```text
 ?smp-status=failed&smp-failure-cause=transaction-failed&smp-message=Transaction%20failed.&smp-receipt-sent=false&smp-tx-code=123ABC
 ```
 
-## III. Additional features
+## Response fields
 
-### 1. Response fields
+### API Helper
 
-##### a) With the API Helper
+The callback `Bundle` can contain:
 
-Several response flags are available when the callback activity is called : 
-* SumUpAPI.Response.RESULT_CODE
-  * Type : int
-  * Possible Values : 
-    * SumUpAPI.Response.ResultCode.TRANSACTION_SUCCESSFUL = 1
-    * SumUpAPI.Response.ResultCode.ERROR_TRANSACTION_FAILED = 2
-    * SumUpAPI.Response.ResultCode.ERROR_GEOLOCATION_REQUIRED = 3
-    * SumUpAPI.Response.ResultCode.ERROR_INVALID_PARAM = 4
-    * SumUpAPI.Response.ResultCode.ERROR_NO_CONNECTIVITY = 6
-    * SumUpAPI.Response.ResultCode.ERROR_DUPLICATE_FOREIGN_TX_ID = 9;
-    * SumUpAPI.Response.ResultCode.ERROR_INVALID_AFFILIATE_KEY = 10;
-* SumUpAPI.Response.MESSAGE
-  * Type : String
-  * Description : A human readable message describing the result of the payment
-* SumUpAPI.Response.TX_CODE
-  * Type : String
-  * Description : The transaction code associated with the payment
-* SumUpAPI.Response.RECEIPT_SENT
-  * Type : boolean
-  * Description : true if a receipt was issued to the customer, false otherwise
+- `SumUpAPI.Response.RESULT_CODE`
+- `SumUpAPI.Response.MESSAGE`
+- `SumUpAPI.Response.TX_CODE`
+- `SumUpAPI.Response.RECEIPT_SENT`
 
-The response flags are provided within the Bundle that is passed back to the callback activity.
+Known `RESULT_CODE` values:
 
-```java 
- 	int resultCode = getIntent().getExtras()getInt(SumUpAPI.Response.RESULT_CODE);
- ```
+- `SumUpAPI.Response.ResultCode.TRANSACTION_SUCCESSFUL = 1`
+- `SumUpAPI.Response.ResultCode.ERROR_TRANSACTION_FAILED = 2`
+- `SumUpAPI.Response.ResultCode.ERROR_GEOLOCATION_REQUIRED = 3`
+- `SumUpAPI.Response.ResultCode.ERROR_INVALID_PARAM = 4`
+- `SumUpAPI.Response.ResultCode.ERROR_NO_CONNECTIVITY = 6`
+- `SumUpAPI.Response.ResultCode.ERROR_DUPLICATE_FOREIGN_TX_ID = 9`
+- `SumUpAPI.Response.ResultCode.ERROR_INVALID_AFFILIATE_KEY = 10`
 
-##### b) With the URI call / Payment API - Web
+### URI call and mobile web
 
-* smp-status: `success/failed`
-* smp-failure-cause (send it smp-status is `failed`): `transaction-failed/geolocation-required/invalid-param/invalid-token`
+- `smp-status`: `success` or `failed`
+- `smp-failure-cause`: present when `smp-status=failed`
+- Known `smp-failure-cause` values:
+  `transaction-failed`, `geolocation-required`, `invalid-param`,
+  `invalid-token`
 
+## Additional checkout parameters
 
-### 2. Additional checkout parameters
+### Transaction identifier
 
-#### Transaction identifier
-The `foreignTransactionID` identifier will be associated with the transaction and can be used to retrieve details related to the transaction. See [API documentation](http://docs.sumup.com/rest-api/transactions-api/) for details. Please make sure that this ID is unique within the scope of the SumUp merchant account and sub-accounts. It must not be longer than 128 characters.
-The foreignTransactionID is available when the callback activity is called: `SumUpAPI.Param.FOREIGN_TRANSACTION_ID`
+`foreignTransactionId` is associated with the transaction and can be used later
+to retrieve transaction details. It must be unique within the SumUp merchant
+account scope and must not exceed 128 characters.
 
-#### Skip success screen
-To skip the screen shown at the end of a successful transaction, the `skipSuccessScreen` parameter can be used. When using the parameter  your application is responsible for displaying the transaction result to the customer. In combination with the Receipts API your application can also send your own receipts, see [API documentation](http://docs.sumup.com/rest-api/transactions-api/) for details. Please note success screens will still be shown when using the SumUp Air Lite readers.
+It is available in the callback activity as:
+
+```java
+Bundle extras = data.getExtras();
+String foreignTransactionId = extras.getString(SumUpAPI.Param.FOREIGN_TRANSACTION_ID);
+```
+
+### Skip success screen
+
+When `skipSuccessScreen` is enabled, your application becomes responsible for
+showing the final transaction state to the customer. Success screens can still
+be shown when using SumUp Air Lite readers.
 
 ## Community
-- **Questions?** Get in contact with our integration team by sending an email to
-<a href="mailto:integration@sumup.com">integration@sumup.com</a>.
-- **Found a bug?** [Open an issue](https://github.com/sumup/sumup-android-api/issues/new).
-Please provide as much information as possible.
+
+- Questions: contact
+  [integration@sumup.com](mailto:integration@sumup.com)
+- Bugs: [open an issue](https://github.com/sumup/sumup-android-api/issues/new)
