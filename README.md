@@ -9,7 +9,7 @@
 
 </div>
 
-This repository contains a sample Android app for the SumUp Payment API and the legacy `com.sumup:merchant-api` helper artifact.
+This repository contains a sample Android app for the SumUp Payment API and demonstrates integration via the `com.sumup:merchant-api` artifact published in the SumUp Maven repository.
 
 Use it when you want to:
 
